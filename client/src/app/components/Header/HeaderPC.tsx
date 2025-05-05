@@ -3,7 +3,6 @@
 import React from 'react'
 import logo from '../../assets/images/Logonetflix.png'
 import Link from 'next/link'
-import { Button } from "@/components/ui/button"
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { ModeToggle } from '../mode-toggle'

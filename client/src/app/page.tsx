@@ -1,7 +1,6 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import MoviesCarousel from "./MoviesCarousel";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import TruncatableTitle from "./TruncatableTitle";
+import ItemCard from "./components/ItemCard/ItemCard";
 
 export default function Home() {
   const updatedMovies = [
@@ -106,81 +105,26 @@ export default function Home() {
       thumbnail: 'https://img.jakpost.net/c/2020/02/17/2020_02_17_86796_1581916183._large.jpg',
       description: "The absolute top secret love story of a chaebol heiress who made an emergency landing in North Korea because of a paragliding accident and a North Korean special officer who falls in love with her and who is hiding and protecting her."
     }
-
-
   ]
 
   return (
-    <div className="flex flex-col items-center justify-center font-[family-name:var(--font-geist-sans)]">
-      <div className="w-[calc(100vw-13rem)] h-[calc(100vh-5rem)]">
-        <MoviesCarousel />
-      </div>
-
-      <main className="w-[calc(100vw-13rem)]">
-        <h2 className="uppercase relative inline-block heading-bar  mt-8">Recently updated movies</h2>
+    <div className="content w-[calc(100vw-13rem)]">
+      <MoviesCarousel />
+      <main>
+        <h2 className="uppercase relative inline-block heading-bar mt-8">Recently updated movies</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
           {updatedMovies.map((movie) => (
-            <Card key={movie.id} className="card-animated-border cursor-pointer hover:brightness-90 transition duration-300">
-              <img
-                src={movie.poster}
-                alt={movie.name}
-                className="w-full h-64 object-contain"
-              />
-              <CardHeader>
-                <HoverCard>
-                  <HoverCardTrigger asChild>
-                    <TruncatableTitle>
-                      {`${movie.name} (${movie.year})`}
-                    </TruncatableTitle>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="text-sm">
-                    {movie.name} ({movie.year})
-                  </HoverCardContent>
-                </HoverCard>
-
-                <CardDescription className="line-clamp-3 text-sm text-justify mt-1">
-                  {movie.description}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <ItemCard key={movie.id} item={movie} />
           ))}
         </div>
 
         <h2 className="uppercase relative inline-block heading-bar mt-8">Recently updated TV-Series</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
           {updatedSeries.map((series) => (
-            <Card key={series.id} className="card-animated-border cursor-pointer hover:brightness-90 transition duration-300">
-              <img
-                src={series.poster}
-                alt={series.name}
-                className="w-full h-64 object-contain"
-              />
-              <CardHeader>
-                <HoverCard>
-                  <HoverCardTrigger asChild>
-                    <TruncatableTitle>
-                      {`${series.name} (${series.year})`}
-                    </TruncatableTitle>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="text-sm">
-                    {series.name} ({series.year})
-                  </HoverCardContent>
-                </HoverCard>
-
-                <CardDescription className="line-clamp-3 text-sm text-justify mt-1">
-                  {series.description}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <ItemCard key={series.id} item={series} />
           ))}
         </div>
       </main>
-
-      <footer className="bg-gray-900 text-white w-full py-8 mt-8">
-        <div className="text-center">
-          <p className="text-2xl">&copy; {new Date().getFullYear()} Do Hieu Nghia. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

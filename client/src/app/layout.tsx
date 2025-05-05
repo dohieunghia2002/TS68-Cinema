@@ -36,7 +36,16 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <HeaderPC />
-          {children}
+          <div className="wrapper flex flex-col items-center justify-center font-[family-name:var(--font-geist-sans)]">
+
+            {children}
+
+            <footer className="bg-gray-900 text-white w-full py-8 mt-8">
+              <div className="text-center">
+                <p className="text-2xl">&copy; {new Date().getFullYear()} Do Hieu Nghia. All rights reserved.</p>
+              </div>
+            </footer>
+          </div>
         </ThemeProvider>
       </body>
     </html>
