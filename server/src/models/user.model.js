@@ -5,9 +5,9 @@ const userSchema = new mongoose.Schema({
     fullname: { type: String, required: true },
     password: { type: String, required: true },
     avatar: { type: String, default: 'https://i.pinimg.com/474x/fe/30/c6/fe30c64eeffd665d0772ad31b554a555.jpg' },
-    isAdmin: { type: Boolean, default: false }
+    isAdmin: { type: Boolean, default: false },
+    refreshtoken: { type: String }
 }, { collection: 'users' })
-
 
 const User = mongoose.model('User', userSchema);
 export default User;
