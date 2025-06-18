@@ -1,7 +1,7 @@
 import z, { date } from 'zod'
 
 export const RegisterBody = z.object({
-    name: z.string().trim().min(2).max(256),
+    fullname: z.string().trim().min(2).max(256),
     email: z.string().email(),
     password: z.string().min(6).max(100),
     confirmPassword: z.string().min(6).max(100),
@@ -19,10 +19,10 @@ export type RegisterBodyType = z.TypeOf<typeof RegisterBody>
 
 export const RegisterRes = z.object({
     data: z.object({
-        token: z.string(),
+        // token: z.string(),
         account: z.object({
             id: z.number(),
-            name: z.string(),
+            fullname: z.string(),
             email: z.string()
         })
     })

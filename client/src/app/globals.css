@@ -179,3 +179,8 @@
     animation: borderTrail 4s linear infinite;
   }
 }
+
+
+button:enabled{
+  cursor: pointer !important;
+}

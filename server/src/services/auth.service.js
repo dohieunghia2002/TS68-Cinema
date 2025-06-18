@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import User from "../models/user.model.js";
+import Favorite from "../models/favorite.model.js";
 
 
 export const generateAccessoken = async ({ _id, isAdmin }) => {
@@ -43,6 +44,7 @@ const AuthService = {
             });
 
             await newUser.save();
+            await Favorite.create({ user: newUser._id, film: [] });
 
             return {
                 success: true,

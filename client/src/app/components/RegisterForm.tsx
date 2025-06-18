@@ -2,8 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -17,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { RegisterBody, RegisterBodyType } from "../SchemaValidation/AuthValidation"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import envConfig from "@/config"
 
 
 export function RegisterForm() {
@@ -24,7 +23,7 @@ export function RegisterForm() {
     const form = useForm<RegisterBodyType>({
         resolver: zodResolver(RegisterBody),
         defaultValues: {
-            name: '',
+            fullname: '',
             email: '',
             password: '',
             confirmPassword: ''
@@ -32,10 +31,16 @@ export function RegisterForm() {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: RegisterBodyType) {
+    async function onSubmit(values: RegisterBodyType) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
+        const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/signup`, {
+            body: JSON.stringify(values),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        }).then((res) => res.json())
     }
 
     return (
@@ -52,10 +57,13 @@ export function RegisterForm() {
                 </DialogHeader>
                 <div>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-3xl p-6">
+                        <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                            console.log("Validation faild", errors);
+
+                        })} className="space-y-8 text-3xl p-6">
                             <FormField
                                 control={form.control}
-                                name="name"
+                                name="fullname"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-[1.3rem] text-red-600">Fullname</FormLabel>
@@ -110,13 +118,14 @@ export function RegisterForm() {
                                     </FormItem>
                                 )}
                             />
+                            <DialogFooter>
+                                <Button type="button" className="text-black" onClick={() => form.reset()}>Cancel</Button>
+                                <Button type="submit" className="bg-red-600 text-amber-50">Submit</Button>
+                            </DialogFooter>
                         </form>
+
                     </Form>
                 </div>
-                <DialogFooter>
-                    <Button variant='outline' className="text-amber-50" onClick={() => form.reset()}>Cancel</Button>
-                    <Button type="submit" className="bg-red-600 text-amber-50">Submit</Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     )
