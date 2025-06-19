@@ -7,4 +7,10 @@ const createNewFilm = async (req, res) => {
     return res.status(result.statusCode).json(result.data);
 }
 
-export default { createNewFilm };
+// [GET] /film/movies/all
+const getAllMovies = async (req, res) => {
+    const result = await FilmService.getAllMovies();
+    return res.status(result.statusCode).json(result.data);
+}
+
+export default { createNewFilm, getAllMovies };
