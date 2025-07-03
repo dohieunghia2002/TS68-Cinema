@@ -15,10 +15,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { RegisterBody, RegisterBodyType } from "../SchemaValidation/AuthValidation"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useAuthDialog } from "@/app/components/AuthDialogContext"
 import envConfig from "@/config"
 
 
 export function RegisterForm() {
+    const { openDialog, setOpenDialog } = useAuthDialog()
     // 1. Define your form.
     const form = useForm<RegisterBodyType>({
         resolver: zodResolver(RegisterBody),
@@ -41,10 +43,17 @@ export function RegisterForm() {
             },
             method: 'POST'
         }).then((res) => res.json())
+
+        // ✅ Nếu thành công:
+        form.reset()
+        setOpenDialog(null)         // Đóng dialog hiện tại
+        setTimeout(() => {
+            setOpenDialog("login")  // Mở dialog đăng nhập
+        }, 300) // delay nhẹ để tránh "Dialog overlap"
     }
 
     return (
-        <Dialog>
+        <Dialog open={openDialog === "register"} onOpenChange={(v) => setOpenDialog(v ? "register" : null)}>
             <DialogTrigger asChild>
                 <Button variant="outline">Register</Button>
             </DialogTrigger>

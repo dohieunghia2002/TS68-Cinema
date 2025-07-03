@@ -94,6 +94,7 @@ const AuthService = {
                 fullname: user.fullname,
                 email: user.email,
                 avatar: user.avatar,
+                isAdmin: user.isAdmin
             }
 
             return {

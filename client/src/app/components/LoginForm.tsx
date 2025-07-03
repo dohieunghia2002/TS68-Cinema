@@ -15,14 +15,17 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterBody, RegisterBodyType } from "../SchemaValidation/AuthValidation"
+import { LoginBody, LoginBodyType } from "../SchemaValidation/AuthValidation"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useAuthDialog } from "@/app/components/AuthDialogContext"
+import envConfig from "@/config"
 
 
 export function LoginForm() {
+    const { openDialog, setOpenDialog } = useAuthDialog()
     // 1. Define your form.
-    const form = useForm<RegisterBodyType>({
-        resolver: zodResolver(RegisterBody),
+    const form = useForm<LoginBodyType>({
+        resolver: zodResolver(LoginBody),
         defaultValues: {
             email: '',
             password: ''
@@ -30,14 +33,36 @@ export function LoginForm() {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: RegisterBodyType) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    async function onSubmit(values: LoginBodyType) {
+        try {
+            const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/signin`, {
+                body: JSON.stringify(values),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST'
+            }).then(async (res) => {
+                const payload = await res.json()
+                const data = {
+                    status: res.status,
+                    payload
+                }
+                if (!res.ok) {
+                    throw data
+                }
+                return data
+            })
+        } catch (error: any) {
+            form.setError("root", {
+                type: "server",
+                message: error?.payload?.error || "Đã xảy ra lỗi bất ngờ"
+            })
+        }
+
     }
 
     return (
-        <Dialog>
+        <Dialog open={openDialog === "login"} onOpenChange={(v) => setOpenDialog(v ? "login" : null)}>
             <DialogTrigger asChild>
                 <Button variant="destructive">Login</Button>
             </DialogTrigger>
@@ -79,13 +104,19 @@ export function LoginForm() {
                                     </FormItem>
                                 )}
                             />
+                            {form.formState.errors.root && (
+                                <p className="text-red-500 text-lg text-center">
+                                    {form.formState.errors.root.message}
+                                </p>
+                            )}
+                            <DialogFooter>
+                                <Button variant='outline' className="text-amber-50" onClick={() => form.reset()}>Cancel</Button>
+                                <Button type="submit" className="bg-red-600 text-amber-50">Submit</Button>
+                            </DialogFooter>
                         </form>
                     </Form>
                 </div>
-                <DialogFooter>
-                    <Button variant='outline' className="text-amber-50" onClick={() => form.reset()}>Cancel</Button>
-                    <Button type="submit" className="bg-red-600 text-amber-50">Submit</Button>
-                </DialogFooter>
+
             </DialogContent>
         </Dialog>
     )

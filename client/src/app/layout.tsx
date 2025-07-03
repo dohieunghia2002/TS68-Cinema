@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/app/components/theme-provider"
+import { AuthDialogProvider } from "@/app/components/AuthDialogContext"
 import HeaderPC from "./components/Header/HeaderPC";
 
 const geistSans = Geist({
@@ -35,7 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <HeaderPC />
+          <AuthDialogProvider>
+            <HeaderPC />
+          </AuthDialogProvider>
           <div className="wrapper flex flex-col items-center justify-center font-[family-name:var(--font-geist-sans)]">
 
             {children}
